@@ -2,10 +2,8 @@ server:
   port: 8080
 
 spring:
-  #其用哪一个环境配置
   profiles:
     active: dev
-  #开启循环依赖
   main:
     allow-circular-references: true
   datasource:
