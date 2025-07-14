@@ -2,4 +2,42 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.sky.mapper.EmployeeMapper">
+    <insert id="addEmployee">
+        insert into employee(id, name, username, password, phone, sex, id_number, status, create_time, update_time, create_user, update_user)
+        values (null,#{name},#{username},#{password},#{phone},#{sex},#{idNumber},#{status},#{createTime},#{updateTime},#{createUser},#{updateUser})
+    </insert>
+    <update id="updateEmployee">
+        update employee
+        <set>
+            <if test="name !=null">name = #{name},</if>
+            <if test="username !=null ">username = #{username},</if>
+            <if test="password !=null ">password = #{password},</if>
+            <if test="phone !=null ">phone = #{phone},</if>
+            <if test="sex !=null ">sex = #{sex},</if>
+            <if test="idNumber !=null ">id_number = #{idNumber},</if>
+            <if test="updateTime !=null ">update_time = #{updateTime},</if>
+            <if test="updateUser !=null ">update_user = #{updateUser},</if>
+            <if test="status !=null ">status = #{status},</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="getCount" resultType="java.lang.Integer">
+        select count(*) from employee
+        <where>
+            <if test="name!=null and name!=''">name like concat('%',#{name},'%')</if>
+        </where>
+    </select>
+    <select id="getEmployeeList" resultType="com.sky.entity.Employee">
+        select * from employee
+        <where>
+            <if test="name!=null and name!=''">name like concat('%',#{name},'%')</if>
+        </where>
+        order by create_time desc
+        limit #{begin},#{pageSize}
+    </select>
+    <select id="getEmployeeById" resultType="com.sky.entity.Employee">
+        select * from employee where id = #{id}
+    </select>
+
 </mapper>
