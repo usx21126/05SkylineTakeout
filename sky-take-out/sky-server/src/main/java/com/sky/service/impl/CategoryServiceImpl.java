@@ -35,7 +35,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public PageResult getCategoryPages(CategoryPageQueryDTO categoryPageQueryDTO) {
         Integer number =categoryMapper.getCount(categoryPageQueryDTO);
-        List<Category> categoryList = categoryMapper.getCategoryList(categoryPageQueryDTO.getName(),categoryPageQueryDTO.getType(),(categoryPageQueryDTO.getPage()-1)*categoryPageQueryDTO.getPageSize(),categoryPageQueryDTO.getPageSize());
+        List<Category> categoryList = categoryMapper.getCategoryPageList(categoryPageQueryDTO.getName(),categoryPageQueryDTO.getType(),(categoryPageQueryDTO.getPage()-1)*categoryPageQueryDTO.getPageSize(),categoryPageQueryDTO.getPageSize());
         return new PageResult(number,categoryList);
     }
 
@@ -47,8 +47,8 @@ public class CategoryServiceImpl implements CategoryService {
     public void updateCategoryInfo(CategoryDTO categoryDTO) {
         Category category = new Category();
         BeanUtils.copyProperties(categoryDTO,category);
-        category.setUpdateTime(LocalDateTime.now());
-        category.setUpdateUser(BaseContext.getCurrentId());
+//        category.setUpdateTime(LocalDateTime.now());
+//        category.setUpdateUser(BaseContext.getCurrentId());
         categoryMapper.updateCategory(category);
     }
 
@@ -77,10 +77,10 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = new Category();
         BeanUtils.copyProperties(categoryDTO,category);
         category.setStatus(0);
-        category.setCreateTime(LocalDateTime.now());
-        category.setUpdateTime(LocalDateTime.now());
-        category.setUpdateUser(BaseContext.getCurrentId());
-        category.setCreateUser(BaseContext.getCurrentId());
+//        category.setCreateTime(LocalDateTime.now());
+//        category.setUpdateTime(LocalDateTime.now());
+//        category.setUpdateUser(BaseContext.getCurrentId());
+//        category.setCreateUser(BaseContext.getCurrentId());
         categoryMapper.addCategory(category);
     }
 
@@ -100,5 +100,15 @@ public class CategoryServiceImpl implements CategoryService {
             throw new DeletionNotAllowedException(MessageConstant.CATEGORY_BE_RELATED_BY_SETMEAL);
         }
         categoryMapper.deleteCategoryById(id);
+    }
+
+    /**
+     * 根据类型查询分类
+     * @param type
+     * @return
+     */
+    @Override
+    public List<Category> getCategoryList(Integer type) {
+        return categoryMapper.getCategoryList(type);
     }
 }

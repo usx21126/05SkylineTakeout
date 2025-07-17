@@ -1,8 +1,10 @@
 package com.sky.mapper;
 
+import com.sky.anno.AutoFill;
 import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeePageQueryDTO;
 import com.sky.entity.Employee;
+import com.sky.enumeration.OperationType;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -23,6 +25,7 @@ public interface EmployeeMapper {
      * 添加员工
      * @param employee
      */
+    @AutoFill(OperationType.INSERT)
     void addEmployee(Employee employee);
 
     /**
@@ -45,6 +48,7 @@ public interface EmployeeMapper {
      * 更新员工数据
      * @param employee
      */
+    @AutoFill(OperationType.UPDATE)
     void updateEmployee(Employee employee);
 
     /**

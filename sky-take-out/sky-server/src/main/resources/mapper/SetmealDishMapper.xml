@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sky.mapper.SetmealDishMapper">
+    <insert id="addSetmealDishes">
+        insert into setmeal_dish(id, setmeal_id, dish_id, name, price, copies) values
+        <foreach collection="setmealDishes" item="setmealDish" separator=",">
+            (null,#{setmealDish.setmealId},#{setmealDish.dishId},#{setmealDish.name},#{setmealDish.price},#{setmealDish.copies})
+        </foreach>
+
+    </insert>
+    <delete id="deleteSetmealDishesBySetmealId">
+        delete from setmeal_dish where setmeal_id = #{setmealId}
+    </delete>
+    <select id="getCountByDishId" resultType="java.lang.Integer">
+        select count(*) from setmeal_dish
+        where dish_id in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+    <select id="getSetmealIdsByDishId" resultType="java.lang.Long">
+        select distinct setmeal_id from setmeal_dish where dish_id = #{dishId}
+    </select>
+    <select id="getSetmealDishBySetmealId" resultType="com.sky.entity.SetmealDish">
+        select id,setmeal_id,dish_id,name,price,copies from setmeal_dish where setmeal_id = #{setmealId}
+    </select>
+    <select id="getDishIdsBySetmealId" resultType="java.lang.Long">
+        select dish_id from setmeal_dish where setmeal_id = #{setmealId}
+    </select>
+</mapper>

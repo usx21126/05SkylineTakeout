@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sky.mapper.DishMapper">
+    <insert id="addDish" useGeneratedKeys="true" keyProperty="id">
+        insert into dish(id, name, category_id, price, image, description, status, create_time, update_time, create_user, update_user)
+        values (null,#{name},#{categoryId},#{price},#{image},#{description},#{status},#{createTime},#{updateTime},#{createUser},#{updateUser})
+    </insert>
+    <update id="updateDish">
+        update dish
+        <set>
+            <if test="name != null">name = #{name},</if>
+            <if test="categoryId != null">category_id = #{categoryId},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="image != null">image = #{image},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createTime!=null">create_time = #{createTime},</if>
+            <if test="updateTime!=null">update_time = #{updateTime},</if>
+            <if test="createUser!=null">create_user = #{createUser},</if>
+            <if test="updateUser!=null">update_user = #{updateUser},</if>
+        </set>
+        where id = #{id}
+    </update>
+    <delete id="deleteBatch">
+        delete from dish where id in
+        <foreach collection="ids" separator="," item="id" open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <select id="getDishPageList" resultType="com.sky.vo.DishVO">
+        select dish.id id,dish.name name,category_id,price,image,description,dish.status,dish.update_time,category.name category_name
+        from dish left join category on dish.category_id=category.id
+        <where>
+            <if test="categoryId != null">
+                category_id = #{categoryId}
+            </if>
+            <if test="name!=null and name!=''">
+                and dish.name like concat('%',#{name},'%')
+            </if>
+            <if test="status !=null">
+                and dish.status = #{status}
+            </if>
+        </where>
+        order by dish.create_time desc
+        limit #{begin},#{pageSize}
+    </select>
+    <select id="getCount" resultType="java.lang.Integer">
+        select count(*) from dish
+        <where>
+            <if test="categoryId != null">
+                category_id = #{categoryId}
+            </if>
+            <if test="name!=null and name!=''">
+                and dish.name like concat('%',#{name},'%')
+            </if>
+            <if test="status != null">
+                and dish.status = #{status}
+            </if>
+        </where>
+    </select>
+    <select id="getById" resultType="com.sky.entity.Dish">
+        select id, name, category_id, price, image, description, status, create_time, update_time, create_user, update_user from dish where id = #{id}
+    </select>
+    <select id="getDishesByCategoryId" resultType="com.sky.entity.Dish">
+        select id, name, category_id, price, image, description, status, create_time, update_time, create_user, update_user from dish
+        where category_id = #{categoryId}
+    </select>
+    <select id="getStatusCount" resultType="java.lang.Integer">
+        select count(*) from dish where id in
+        <foreach collection="dishIds" item="dishId" separator="," open="(" close=")">
+            #{dishId}
+        </foreach>
+        and status = 1
+    </select>
+</mapper>

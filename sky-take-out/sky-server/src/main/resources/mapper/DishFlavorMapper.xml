@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sky.mapper.DishFlavorMapper">
+    <insert id="addFlavors">
+        insert into dish_flavor(id,dish_id,name,value) values
+        <foreach collection="flavors" separator="," item="flavor">
+            (null,#{flavor.dishId},#{flavor.name},#{flavor.value})
+        </foreach>
+
+
+    </insert>
+    <delete id="deleteBatch">
+        delete from dish_flavor where dish_id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <delete id="deleteDishFlavorByDishId">
+        delete from dish_flavor where dish_id = #{id}
+    </delete>
+    <select id="getByDishId" resultType="com.sky.entity.DishFlavor">
+        select id,dish_id,name,value from dish_flavor where dish_id = #{id}
+    </select>
+</mapper>
