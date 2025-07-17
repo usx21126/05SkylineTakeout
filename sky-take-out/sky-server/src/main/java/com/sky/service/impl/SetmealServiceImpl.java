@@ -72,7 +72,7 @@ public class SetmealServiceImpl implements SetmealService {
             Integer count = setmealMapper.getDisableStatusCountByIds(ids);
 
             if(count != ids.size()){
-                throw new SetmealEnableFailedException(MessageConstant.DISH_ON_SALE);
+                throw new SetmealEnableFailedException(MessageConstant.SETMEAL_ON_SALE);
             }
             setmealMapper.deleteSetmealByIds(ids);
         }

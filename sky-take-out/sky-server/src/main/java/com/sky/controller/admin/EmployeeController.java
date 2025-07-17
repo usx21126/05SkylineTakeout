@@ -1,10 +1,12 @@
 package com.sky.controller.admin;
 
 import com.sky.constant.JwtClaimsConstant;
+import com.sky.constant.MessageConstant;
 import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
 import com.sky.dto.EmployeePageQueryDTO;
 import com.sky.entity.Employee;
+import com.sky.exception.LoginFailedException;
 import com.sky.properties.JwtProperties;
 import com.sky.result.PageResult;
 import com.sky.result.Result;
@@ -48,12 +50,17 @@ public class EmployeeController {
         Employee employee = employeeService.login(employeeLoginDTO);
 
         //登录成功后，生成jwt令牌
-        Map<String, Object> claims = new HashMap<>();
-        claims.put(JwtClaimsConstant.EMP_ID, employee.getId());
-        String token = JwtUtil.createJWT(
-                jwtProperties.getAdminSecretKey(),
-                jwtProperties.getAdminTtl(),
-                claims);
+        String token = null;
+        try {
+            Map<String, Object> claims = new HashMap<>();
+            claims.put(JwtClaimsConstant.EMP_ID, employee.getId());
+            token = JwtUtil.createJWT(
+                    jwtProperties.getAdminSecretKey(),
+                    jwtProperties.getAdminTtl(),
+                    claims);
+        } catch (Exception e) {
+            throw new LoginFailedException(MessageConstant.LOGIN_FAILED);
+        }
 
         EmployeeLoginVO employeeLoginVO = EmployeeLoginVO.builder()
                 .id(employee.getId())
