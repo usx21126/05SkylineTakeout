@@ -23,6 +23,9 @@
     <delete id="deleteShoppingCartByUserId">
         delete from shopping_cart where user_id = #{userId}
     </delete>
+    <delete id="deleteShoppingCartById">
+        delete shopping_cart from shopping_cart where id = #{id}
+    </delete>
     <select id="getByShoppingCartInfo" resultType="com.sky.entity.ShoppingCart">
         select id, name, image, user_id, dish_id, setmeal_id, dish_flavor, number, amount, create_time from shopping_cart
         <where>
