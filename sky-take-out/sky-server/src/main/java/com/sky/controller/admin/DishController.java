@@ -11,10 +11,13 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @RestController
@@ -23,7 +26,8 @@ import java.util.List;
 public class DishController {
     @Autowired
     private DishService dishService;
-
+    @Autowired
+    private RedisTemplate redisTemplate;
     /**
      * 新增菜品
      * @param dishDTO
@@ -34,7 +38,8 @@ public class DishController {
     public Result<String> addDish(@RequestBody DishDTO dishDTO) {
         log.info("DishDTO:{}", dishDTO);
         dishService.addDish(dishDTO);
-
+        // 清理缓存
+        redisTemplate.delete("dish_"+dishDTO.getCategoryId());
         return Result.success();
     }
 
@@ -61,6 +66,9 @@ public class DishController {
     public Result<String> deleteDish(@RequestParam List<Long> ids) {
         log.info("ids:{}", ids);
         dishService.deleteDish(ids);
+        //删除全部缓存
+        Set keys = redisTemplate.keys("dish_*");
+        redisTemplate.delete(keys);
         return Result.success();
     }
 
@@ -87,6 +95,9 @@ public class DishController {
     public Result<DishVO> updateDishInfo(@RequestBody DishDTO dishDTO) {
         log.info("DishDTO:{}", dishDTO);
         dishService.updateDishInfo(dishDTO);
+        Set keys = redisTemplate.keys("dish_*");
+        redisTemplate.delete(keys);
+
         return Result.success();
     }
 
@@ -108,7 +119,8 @@ public class DishController {
     public Result<String> updateDishStatus(@PathVariable Integer status,Long id) {
         log.info("status:{},id:{}", status,id);
         dishService.updateDishStatus(status,id);
-
+        Set keys = redisTemplate.keys("dish_*");
+        redisTemplate.delete(keys);
         return Result.success();
     }
 }

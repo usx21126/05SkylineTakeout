@@ -74,4 +74,6 @@ public interface DishMapper {
     List<Dish> getDishesByCategoryId(Long categoryId);
 
     Integer getStatusCount(List<Long> dishIds);
+
+    List<Dish> getDishList(Dish dish);
 }
