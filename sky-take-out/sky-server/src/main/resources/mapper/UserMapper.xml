@@ -9,4 +9,15 @@
         select id, openid, name, phone, sex, id_number, avatar, create_time from user
         where openid = #{openid}
     </select>
+    <select id="getUserById" resultType="com.sky.entity.User">
+        select id, openid, name, phone, sex, id_number, avatar, create_time from user
+        where id = #{id}
+    </select>
+    <select id="getTotalUserByDate" resultType="java.lang.Integer">
+        select count(*) from user
+        <where>
+            <if test="beginTime != null">create_time >= #{beginTime}</if>
+            <if test="endTime != null">and create_time <![CDATA[<=]]> #{endTime}</if>
+        </where>
+    </select>
 </mapper>
